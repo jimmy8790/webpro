@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    #test{
+        background-color: red;
+    }
+    #test2{
+        background-color: blue;
+    }
+</style>
+<body>
+    
+    <h1>버튼을 누르면 문자가 출력됩니다. </h1>
+    <h1 id="test">합계출력영역</h1>
+    <h1 id="test2">문자출력영역</h1>
+    <button onclick="strprint()">더하기 결과 출력</button>
+    <button onclick="aprint()">입력한 문자 출력</button>
+    <script>
+        let x = parseInt(prompt("첫번째 더할 수를 입력하세요"));
+        let y = parseInt(prompt("두번째 더할 수를 입력하세요"));
+        let z = x + y;
+        let a = prompt("출력할 문자를 입력하세요");
+        function strprint(){
+        document.getElementById("test").innerHTML=z;
+    }
+    function aprint(){
+        document.getElementById("test2").innerHTML=a;
+    }
+    </script>
+
+</body>
+</html>

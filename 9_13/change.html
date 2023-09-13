@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<body>
+     <p id="change">다음에 학습할 내용은 HTML입니다. </p>
+     <button onclick="str_ch()"> 학습을 끝냈으면 누르세요. </button>
+     <script>
+        function str_ch(){
+            let text = document.getElementById("change").innerHTML;
+            document.getElementById("change").innerHTML = text.replace("HTML", "JS");
+        }
+     </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>지뢰찾기 게임</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(10, 30px); /* 10x10 그리드 */
+            gap: 2px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>지뢰찾기 게임</h1>
+    <div class="grid" id="grid"></div>
+
+    <script>
+        // 게임 설정
+        const numRows = 10;
+        const numCols = 10;
+        const numMines = 20;
+        
+        // 그리드 생성
+        const grid = document.getElementById("grid");
+        for (let i = 0; i < numRows; i++) {
+            for (let j = 0; j < numCols; j++) {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.dataset.row = i;
+                cell.dataset.col = j;
+                grid.appendChild(cell);
+            }
+        }
+        
+        // 지뢰 배치
+        const mines = [];
+        while (mines.length < numMines) {
+            const row = Math.floor(Math.random() * numRows);
+            const col = Math.floor(Math.random() * numCols);
+            if (!mines.some(mine => mine.row === row && mine.col === col)) {
+                mines.push({ row, col });
+                const cell = document.querySelector(`.cell[data-row="${row}"][data-col="${col}"]`);
+                cell.dataset.mine = true;
+            }
+        }
+        
+        // 셀 클릭 이벤트
+        grid.addEventListener("click", handleCellClick);
+        
+        function handleCellClick(event) {
+            const cell = event.target;
+            if (cell.classList.contains("cell") && !cell.classList.contains("revealed")) {
+                cell.classList.add("revealed");
+                if (cell.dataset.mine) {
+                    cell.textContent = "💣️";
+                    alert("지뢰 폭팔!");
+                    history.go(0)
+
+                } else {
+                    const row = parseInt(cell.dataset.row);
+                    const col = parseInt(cell.dataset.col);
+                    const mineCount = countAdjacentMines(row, col);
+                    if (mineCount > 0) {
+                        cell.textContent = mineCount;
+                    } else {
+                        // 주변 지뢰 없으면 주변 셀도 자동으로 열기
+                        revealEmptyCells(row, col);
+                    }
+                }
+            }
+        }
+        
+        // 지뢰 수 계산
+        function countAdjacentMines(row, col) {
+            const neighbors = [
+                { r: -1, c: -1 }, { r: -1, c: 0 }, { r: -1, c: 1 },
+                { r: 0, c: -1 },                  { r: 0, c: 1 },
+                { r: 1, c: -1 }, { r: 1, c: 0 }, { r: 1, c: 1 }
+            ];
+            let mineCount = 0;
+            for (const neighbor of neighbors) {
+                const r = row + neighbor.r;
+                const c = col + neighbor.c;
+                const neighborCell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+                if (neighborCell && neighborCell.dataset.mine) {
+                    mineCount++;
+                }
+            }
+            return mineCount;
+        }
+        
+        // 주변 지뢰 없는 셀 자동 열기
+        function revealEmptyCells(row, col) {
+            const neighbors = [
+                { r: -1, c: -1 }, { r: -1, c: 0 }, { r: -1, c: 1 },
+                { r: 0, c: -1 },                  { r: 0, c: 1 },
+                { r: 1, c: -1 }, { r: 1, c: 0 }, { r: 1, c: 1 }
+            ];
+            for (const neighbor of neighbors) {
+                const r = row + neighbor.r;
+                const c = col + neighbor.c;
+                const neighborCell = document.querySelector(`.cell[data-row="${r}"][data-col="${c}"]`);
+                if (neighborCell && !neighborCell.classList.contains("revealed")) {
+                    neighborCell.classList.add("revealed");
+                    const mineCount = countAdjacentMines(r, c);
+                    if (mineCount > 0) {
+                        neighborCell.textContent = mineCount;
+                    } else {
+                        revealEmptyCells(r, c);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

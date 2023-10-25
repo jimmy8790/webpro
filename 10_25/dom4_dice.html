@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>주사위 굴리기 게임</title>
+    <style>
+        #dice {
+            width: 100px;
+            height: 100px;
+            background-color: white;
+            border: 2px solid black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>주사위 굴리기 게임</h1>
+    <div id="dice">1</div>
+    <button onclick="rollDice()">굴리기</button>
+
+    <script>
+        function rollDice() {
+            const min = 1;
+            const max = 6;
+            const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+            const diceElement = document.getElementById('dice');
+            diceElement.innerText = randomNum;
+        }
+    </script>
+</body>
+</html>
